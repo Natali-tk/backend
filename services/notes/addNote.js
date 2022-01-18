@@ -1,21 +1,16 @@
-const { notesOperations } = require("../../model");
+const { notesOperations } = require("../../repositories");
 const { noteSchema } = require("../../schemas");
+const { sendSuccessRes } = require("../../helpers");
+const {BadRequest}=require("http-errors");
+
 const addNote = async (req, res, next) => {
     try {
         const { error } = noteSchema.validate(req.body);
         if (error) {
-            const err = new Error(error.message);
-            err.status = 400;
-            throw err;
+            throw new BadRequest();
         }
         const result = await notesOperations.addNote(req.body);
-        res.status(201).json({
-            status: "success",
-            code: "201",
-            data: {
-                result
-            }
-        });
+        sendSuccessRes(res, { result }, 201);
     } catch (error) {
         next(error);
     }

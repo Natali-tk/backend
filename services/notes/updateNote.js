@@ -1,28 +1,20 @@
-const { notesOperations } = require("../../model");
+const { notesOperations } = require("../../repositories");
 const { noteSchema } = require("../../schemas");
+const { sendSuccessRes } = require("../../helpers");
+const {BadRequest, NotFound}=require("http-errors");
 
 const updateNote = async (req, res, next) => {
     try {
         const { error } = noteSchema.validate(req.body);
         if (error) {
-            const err = new Error("Missing fields");
-            err.status = 400;
-            throw err;
+            throw new BadRequest("Missing fields");
         }
         const { noteId } = req.params;
         const result = await notesOperations.updateNote(noteId, req.body);
         if (!result) {
-            const error = new Error("Not found");
-            error.status = 404;
-            throw error;
+            throw new NotFound( `Note with id=${noteId} not found`);
         }
-        res.json({
-            status: "success",
-            code: 200,
-            data: {
-                result,
-            },
-        });
+        sendSuccessRes(res, { result }, 200);
 
     } catch (error) {
         next(error);

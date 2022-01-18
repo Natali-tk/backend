@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
-const { notesController } = require("../../controllers");
+const { notesController } = require("../../services");
 
 router.get("/", notesController.getNotes);
 
@@ -12,5 +11,7 @@ router.post("/", notesController.addNote);
 router.delete("/:noteId", notesController.deleteNote);
 
 router.patch("/:noteId", notesController.updateNote);
+
+router.get("/stats", notesController.getStats);
 
 module.exports = router;
