@@ -5,9 +5,11 @@ const getStats = async () => {
   const notes = await listNotes();
   let categoryList = [];
   notes.map((note) => {
-    const uniqNote = categoryList.find((n) => n.category === note.category);
+    const uniqNote = categoryList.find(
+      n => n.category === note.category);
+
     if (uniqNote) {
-      note.archive ? uniqNote.archive++ : uniqNote.active++;
+      note.archive ? uniqNote.archive+=1 : uniqNote.active+=1;
     } else {
       categoryList.push({
         category: note.category,
